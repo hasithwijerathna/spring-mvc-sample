@@ -5,28 +5,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by hasith on 7/9/2016.
  */
 @Configuration
 @EnableWebMvc
+//@EnableWebMvcSecurity
 @ComponentScan(basePackages = "com.hasith.app")
-public class HelloWorldConfiguration {
+public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
-    public ViewResolver viewResolver(){
+    public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("WEB-INF/views/");
@@ -41,6 +39,12 @@ public class HelloWorldConfiguration {
         return messageSource;
     }
 
+    @Override
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+        //registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
+    }
+
     /*@Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
@@ -53,5 +57,9 @@ public class HelloWorldConfiguration {
         //restTemplate.setErrorHandler(responseErrorHandler(messageSourceUtil));
 
         return restTemplate;
+    }*/
+
+    /*protected void configure(HttpSecurity http)throws Exception{
+        http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
     }*/
 }
